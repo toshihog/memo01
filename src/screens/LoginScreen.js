@@ -2,13 +2,45 @@ import React from 'react';
 import { StyleSheet, View, TextInput, TouchableHighlight, Text } from 'react-native';
 
 class LoginScreen extends React.Component {
+  state = {
+    email: '',
+    password: '',
+  }
+
+  handleSubmit() {
+    //{this.props.navigation.navigate('Home')}
+
+    //log in
+    
+
+  }
+
   render() {
     return(
       <View style={styles.container}>
         <Text style={styles.title}>Login</Text>
-        <TextInput style={styles.input} value="Email Adress" />
-        <TextInput style={styles.input} value="password" />
-        <TouchableHighlight style={styles.button} onPress={() => {}} underlayColor='#C70F66'>
+        <TextInput
+          style={styles.input}
+          value={this.state.email}
+          onChangeText={(text) => { this.setState({ email: text }); }}
+          autoCapitalize="none"
+          autoCorrect={false}
+          placeholder="Email Adress"
+        />
+        <TextInput
+          style={styles.input}
+          value={this.state.password}
+          onChangeText={(password) => { this.setState({ password: password });}}
+          autoCapitalize="none"
+          autoCorrect={false}
+          placeholder="Password"
+          secureTextEntry
+        />
+        <TouchableHighlight
+          style={styles.button}
+          onPress={() => this.handleSubmit()}
+          underlayColor='#C70F66'
+        >
           <Text style={styles.buttonTitle}>Login</Text>
         </TouchableHighlight>
       </View>
@@ -17,7 +49,7 @@ class LoginScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  container:{
+  container: {
     flex: 1,
     width: '100%',
     padding: 24,
