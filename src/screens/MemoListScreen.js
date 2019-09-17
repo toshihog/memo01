@@ -3,18 +3,38 @@ import { View, StyleSheet } from 'react-native';
 
 import MemoList from '../components/MemoList';
 import CircleButton from '../elements/CircleButton';
+import firebase from 'firebase';
 
 class MemoListScreen extends React.Component {
+  state = {
+    memoList: [],
+  }
+
+  componentWillMount() {
+    const { currentUser } = firebase.auth();
+    const db = firebase.firestore();
+    db.collection(`users/${currentUser.uid}/memos`)
+      .get()
+      .then((snapshot) => {
+        const memoList = [];
+        snapshot.forEach((doc) => {
+          memoList.push({ ...doc.data(), key: doc.id });
+        });
+        this.setState({ memoList: memoList });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
   handlePress() {
-    const { params } = this.props.navigation.state;
-    this.props.navigation.navigate('MemoCreate', { currentUser: params.currentUser });
+    this.props.navigation.navigate('MemoCreate');
   }
   
   render() {
-    console.log(this.props.navigation.state.params)
     return(
       <View style={styles.container}>
-        <MemoList navigation={this.props.navigation} />
+        <MemoList memoList={this.state.memoList} navigation={this.props.navigation} />
         <CircleButton
          name="plus"
          onPress={() => this.handlePress()}
