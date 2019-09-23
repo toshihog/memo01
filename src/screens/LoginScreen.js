@@ -1,6 +1,7 @@
 import React from 'react';
-import { StyleSheet, View, TextInput, TouchableHighlight, Text } from 'react-native';
+import { StyleSheet, View, TextInput, TouchableHighlight, Text, TouchableOpacity } from 'react-native';
 import firebase from 'firebase';
+import { NavigationActions, StackActions } from 'react-navigation';
 
 class LoginScreen extends React.Component {
   state = {
@@ -9,17 +10,23 @@ class LoginScreen extends React.Component {
   }
 
   handleSubmit() {
-    //log in
     firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
     .then((user) => {
-      console.log('log in success!', user);
-      this.props.navigation.navigate('Home');
+      const resetAction = StackActions.reset({
+        index: 0,
+        actions: [
+          NavigationActions.navigate({ routeName: 'Home' }),
+        ],
+      });
+      this.props.navigation.dispatch(resetAction);
     })
     .catch((error) => {
-      console.log('error!', error);
+      console.log(error);
     });
-    
+  }
 
+  handlePress() {
+    this.props.navigation.navigate('Signup');
   }
 
   render() {
@@ -50,6 +57,12 @@ class LoginScreen extends React.Component {
         >
           <Text style={styles.buttonTitle}>Login</Text>
         </TouchableHighlight>
+        <TouchableOpacity
+          onPress={() => this.handlePress()}
+          style={styles.signup}
+        >
+          <Text style={styles.signupText}>Sign up</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -87,6 +100,13 @@ const styles = StyleSheet.create({
   buttonTitle: {
     color: '#fff',
     fontSize: 18,
+  },
+  signup: {
+    marginTop: 16,
+    alignSelf: 'center',
+  },
+  signupText: {
+    fontSize: 16
   },
   }
 );
